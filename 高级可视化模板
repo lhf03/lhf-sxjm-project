@@ -1,0 +1,16 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+def plot_academic_style(data, x_col, y_col, title):
+    sns.set_theme(style="whitegrid", font="SimHei") # 设置中文显示
+    plt.figure(figsize=(10, 6), dpi=300) # 高分辨率
+    
+    # 绘制带回归线的散点图
+    sns.regplot(data=data, x=x_col, y=y_col, 
+                scatter_kws={'alpha':0.5, 'color':'#2c3e50'}, 
+                line_kws={'color':'#e74c3c'})
+    
+    plt.title(title, fontsize=15)
+    plt.xlabel(x_col, fontsize=12)
+    plt.ylabel(y_col, fontsize=12)
+    plt.savefig(f"{title}.png", bbox_inches='tight') # 自动裁剪边缘
