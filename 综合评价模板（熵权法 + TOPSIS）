@@ -1,0 +1,19 @@
+def topsis_eval(data):
+    # data 为标准化的矩阵 (m个评价对象, n个指标)
+    # 1. 熵权法计算权重
+    p = data / data.sum(axis=0)
+    e = - (p * np.log(p + 1e-9)).sum(axis=0) / np.log(len(data))
+    d = 1 - e
+    weights = d / d.sum()
+    
+    # 2. 计算加权得分
+    weighted_data = data * weights
+    best_v = weighted_data.max(axis=0)  # 正理想解
+    worst_v = weighted_data.min(axis=0) # 负理想解
+    
+    # 3. 计算欧氏距离与得分
+    d_plus = np.sqrt(((weighted_data - best_v)**2).sum(axis=1))
+    d_minus = np.sqrt(((weighted_data - worst_v)**2).sum(axis=1))
+    score = d_minus / (d_plus + d_minus)
+    
+    return score
