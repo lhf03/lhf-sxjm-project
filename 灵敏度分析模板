@@ -1,0 +1,20 @@
+def sensitivity_analysis(model, base_input, param_index, range_pct=0.2):
+    """
+    model: 训练好的模型
+    base_input: 原始输入向量
+    param_index: 要变动的参数索引
+    range_pct: 变动范围，如上下浮动20%
+    """
+    results = []
+    changes = np.linspace(1 - range_pct, 1 + range_pct, 11) # 生成0.8到1.2的倍数
+    
+    for factor in changes:
+        test_input = base_input.copy()
+        test_input[param_index] *= factor
+        output = model.predict(test_input.reshape(1, -1))
+        results.append(output[0])
+        
+    plt.plot(changes, results, 'o-')
+    plt.xlabel("参数变动比例")
+    plt.ylabel("输出结果变化")
+    plt.title("灵敏度分析图")
