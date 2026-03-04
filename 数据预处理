@@ -1,0 +1,23 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+def data_preprocessing(file_path):
+    # 1. 读取数据
+    df = pd.read_excel(file_path) 
+    
+    # 2. 处理缺失值：均值填充或直接删除
+    df = df.fillna(df.mean())
+    
+    # 3. 异常值处理（拉依达准则/3sigma）
+    for col in df.columns:
+        if df[col].dtype in [np.float64, np.int64]:
+            mu = df[col].mean()
+            sigma = df[col].std()
+            df = df[(df[col] > mu - 3*sigma) & (df[col] < mu + 3*sigma)]
+            
+    # 4. 数据标准化（评价类题目必做）
+    scaler = StandardScaler()
+    data_scaled = scaler.fit_transform(df)
+    
+    return pd.DataFrame(data_scaled, columns=df.columns)
